@@ -1,0 +1,6 @@
+sentence-transformers>=3.0
+faiss-cpu>=1.8
+numpy
+pandas
+openai>=1.0
+streamlit>=1.35

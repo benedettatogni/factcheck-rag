@@ -1,0 +1,10 @@
+{"id": "fc1", "lang": "spa", "claim": "Las antenas 5G no propagan el coronavirus: los virus no se transmiten por ondas de radio.", "verdict": "FALSE", "url": ""}
+{"id": "fc2", "lang": "spa", "claim": "Beber agua caliente con limón no cura ni previene el cáncer.", "verdict": "FALSE", "url": ""}
+{"id": "fc3", "lang": "spa", "claim": "Las vacunas contra la COVID-19 no contienen microchips para rastrear a las personas.", "verdict": "FALSE", "url": ""}
+{"id": "fc4", "lang": "spa", "claim": "El cambio climático está causado principalmente por la actividad humana, según el IPCC.", "verdict": "TRUE", "url": ""}
+{"id": "fc5", "lang": "ita", "claim": "Le scie chimiche non esistono: le scie degli aerei sono condensa di vapore acqueo.", "verdict": "FALSE", "url": ""}
+{"id": "fc6", "lang": "ita", "claim": "Il vaccino MPR non causa l'autismo: lo studio che lo sosteneva è stato ritirato.", "verdict": "FALSE", "url": ""}
+{"id": "fc7", "lang": "ita", "claim": "Mangiare aglio non protegge dal contagio da coronavirus.", "verdict": "FALSE", "url": ""}
+{"id": "fc8", "lang": "ita", "claim": "La Terra non è piatta: lo dimostrano le immagini satellitari e la navigazione.", "verdict": "FALSE", "url": ""}
+{"id": "fc9", "lang": "spa", "claim": "Comer ajo no protege contra la infección por coronavirus.", "verdict": "FALSE", "url": ""}
+{"id": "fc10", "lang": "ita", "claim": "Il 5G non trasmette il coronavirus, che si diffonde da persona a persona.", "verdict": "FALSE", "url": ""}
