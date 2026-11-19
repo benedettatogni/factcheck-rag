@@ -1,0 +1,32 @@
+# docker compose up --build
+# API docs: http://localhost:8000/docs
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      LLM_BASE_URL: http://ollama:11434/v1
+      LLM_MODEL: llama3.1
+      USE_DENSE: "1"
+      USE_RERANKER: "1"
+      # To use X-Fact instead of the toy sample, uncomment the two lines below
+      # and the matching volume:
+      # XFACT_DIR: /data/x-fact
+    volumes:
+      - models:/models            # Hugging Face models are downloaded once and reused
+      # - ./x-fact/data/x-fact:/data/x-fact:ro
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    # First run only: docker compose exec ollama ollama pull llama3.1
+
+volumes:
+  models:
+  ollama:

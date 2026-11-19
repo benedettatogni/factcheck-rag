@@ -4,14 +4,16 @@ Multilingual (Italian / Spanish) retrieval-augmented fact-checking assistant.
 Given a claim, it retrieves previously published fact-checks, reranks them and asks an LLM
 to give a verdict with cited sources.
 
-> Status: work in progress (week 1–2 of 5).
+> Status: work in progress. Retrieval, evaluation, REST API and Docker setup are in place; full X-Fact results are next.
 
 ## Architecture
 
 ```
 Fact-checks ES/IT -> cleaning -> BM25 + multilingual embeddings -> FAISS index
-Claim -> hybrid retrieval (RRF) -> cross-encoder reranker -> LLM with citations -> Streamlit UI
+Claim -> hybrid retrieval (RRF) -> cross-encoder reranker -> LLM with citations -> REST API (FastAPI) / Streamlit UI
 ```
+
+The pipeline lives in `src/service.py`; `api.py` (FastAPI) and `app.py` (Streamlit) are thin layers on top of it.
 
 ## Quick start
 
@@ -26,6 +28,54 @@ For the demo, start an LLM (e.g. `ollama pull llama3.1`) and run:
 ```bash
 export LLM_BASE_URL=http://localhost:11434/v1 LLM_MODEL=llama3.1
 streamlit run app.py
+```
+
+## REST API
+
+```bash
+uvicorn api:app --reload        # interactive docs at http://localhost:8000/docs
+```
+
+| Method | Endpoint | What it does |
+| --- | --- | --- |
+| GET | `/health` | Status, number of fact-checks loaded, active components |
+| POST | `/search` | Retrieval only: the most similar fact-checks, no LLM call |
+| POST | `/verify` | Retrieval + LLM: verdict with cited sources |
+
+```bash
+curl -X POST http://localhost:8000/verify \
+  -H "Content-Type: application/json" \
+  -d '{"claim": "Il vaccino MPR causa l\'autismo", "k": 3}'
+```
+
+Example response (shortened):
+
+```json
+{
+  "claim": "Il vaccino MPR causa l'autismo",
+  "answer": "FALSE. Lo studio che collegava il vaccino MPR all'autismo è stato ritirato [1].",
+  "sources": [{"rank": 1, "score": 0.97, "id": "fc6", "lang": "ita", "claim": "Il vaccino MPR non causa l'autismo: ...", "verdict": "FALSE", "url": ""}]
+}
+```
+
+Configuration through environment variables: `DATA_PATH` or `XFACT_DIR` (knowledge base),
+`USE_DENSE` and `USE_RERANKER` (`1`/`0`), `LLM_BASE_URL`, `LLM_MODEL`, `LLM_API_KEY`.
+With `USE_DENSE=0 USE_RERANKER=0` the API starts in seconds with BM25 only, without downloading models.
+
+## Docker
+
+```bash
+docker compose up --build
+docker compose exec ollama ollama pull llama3.1   # first run only
+```
+
+This starts the API on port 8000 and a local LLM with Ollama. Hugging Face models are cached in a
+volume, so they are downloaded only once. The image uses CPU-only PyTorch to stay small.
+
+## Tests
+
+```bash
+pytest -q        # BM25 only, LLM mocked: runs in about a second, no downloads
 ```
 
 ## Data
