@@ -94,11 +94,31 @@ python run_eval.py --xfact x-fact/data/x-fact --dense
 
 ## Results
 
+### Sample data (sanity check)
+
+10 fact-checks and 6 test queries (3 Italian, 3 Spanish, two of them cross-lingual), from `data/`.
+Reproduce with `python run_eval.py --sample --dense` (add `--k 1` for success@1).
+
+| Retriever | success@1 | MRR (k=10) |
+| --- | --- | --- |
+| BM25 | 0.833 | 0.857 |
+| Dense (multilingual-e5-base) | **1.000** | **1.000** |
+| Hybrid (RRF) | 0.833 | 0.875 |
+
+BM25 misses one cross-lingual query: the Spanish claim *"Las estelas de los aviones son químicos para controlarnos"* only reaches the Italian fact-check on chemtrails (*"Le scie chimiche non esistono..."*) at rank 7, because the two texts share no words. Multilingual dense retrieval ranks it first; in the hybrid, the low BM25 rank pulls it down to rank 4.
+
+These numbers come from a toy set of six queries and are only a sanity check: success@10 is trivially 1.0 with ten documents, and no conclusion about hybrid vs dense retrieval should be drawn from them.
+
+### X-Fact (in progress)
+
+Synthetic paraphrased and cross-lingual queries generated with `make_queries.py`; results will be reported separately for same-language and cross-lingual queries.
+
 | Retriever | success@10 | MRR |
 | --- | --- | --- |
 | BM25 | – | – |
 | Dense (multilingual-e5) | – | – |
 | Hybrid (RRF) | – | – |
+| Hybrid + reranker | – | – |
 | Hybrid + reranker | – | – |
 
 ## Limitations
